@@ -1,0 +1,8 @@
+{
+  "t2.micro": { "cpu": 1, "ram": 1 },
+  "t2.small": { "cpu": 1, "ram": 2 },
+  "t2.medium": { "cpu": 2, "ram": 4 },
+  "t3.micro": { "cpu": 2, "ram": 1 },
+  "t3.small": { "cpu": 2, "ram": 2 },
+  "t3.medium": { "cpu": 2, "ram": 4 }
+}
