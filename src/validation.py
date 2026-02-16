@@ -1,11 +1,16 @@
+from pathlib import Path
 from typing import Annotated
 from pydantic import BaseModel, Field, field_validator
 import json
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+EC2_FILE = BASE_DIR / "configs" / "ec2_instances.json"
+
+
 
 def load_ec2_types():
     try:
-        with open("../configs/ec2_instances.json", "r") as f:
+        with open(EC2_FILE, "r") as f:
             return json.load(f)
     except FileNotFoundError:
         raise RuntimeError("EC2 instances json not found")
