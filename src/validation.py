@@ -4,16 +4,15 @@ from pydantic import BaseModel, Field, field_validator
 import json
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-EC2_FILE = BASE_DIR / "configs" / "ec2_instances.json"
-
+EC2_TYPE_FILE = BASE_DIR / "configs" / "ec2_types.json"
 
 
 def load_ec2_types():
     try:
-        with open(EC2_FILE, "r") as f:
+        with open(EC2_TYPE_FILE, "r") as f:
             return json.load(f)
     except FileNotFoundError:
-        raise RuntimeError("EC2 instances json not found")
+        raise RuntimeError("EC2 types json not found")
 
 
 EC2_TYPES = load_ec2_types()
