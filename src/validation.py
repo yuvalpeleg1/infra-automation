@@ -48,6 +48,7 @@ class VMConfig(BaseModel):
             raise ValueError(
                 f"Invalid instance type. These are the options: {list(EC2_TYPES.keys())}"
             )
+        return instance_type
 
     # getting cpu and ram of the intance
     def get_resources(self):

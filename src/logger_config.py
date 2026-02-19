@@ -3,7 +3,12 @@ from pathlib import Path
 
 # logs file path
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOG_FILE = BASE_DIR / "logs" / "provisioning.log"
+LOG_DIR = BASE_DIR / "logs"
+LOG_FILE = LOG_DIR / "provisioning.log"
+
+# Making logs dir if not already exists
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # Setting up the logger
 def setup_logger(name: str):

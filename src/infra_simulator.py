@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+import subprocess
 from logger_config import setup_logger
 from validation import VMConfig
 from machine import Machine
@@ -24,10 +26,11 @@ def get_user_input():
 
 
 # checking validation on input with VMConfig
-def build_Vmconfig(instance: dict) -> VMConfig:
+def build_VMconfig(instance: dict) -> VMConfig:
     return VMConfig(**instance)
 
 
+# after validation we can create the Machine
 def create_machine(config: VMConfig) -> Machine:
     resources = config.get_resources()
 
@@ -38,3 +41,47 @@ def create_machine(config: VMConfig) -> Machine:
         cpu=resources["cpu"],
         ram=resources["ram"],
     )
+
+
+def save_instance(machine: Machine):
+    if CONFIG_FILE.exists():
+        with open(CONFIG_FILE, "r") as f:
+            data = json.load(f)
+    else:
+        data = []
+
+    data.append(machine.to_dict())
+    with open(CONFIG_FILE, "w") as f:
+        data = json.dump(data, f, indent=2)
+
+
+def run_bash_script():
+    try:
+        subprocess.run(["bash", str(SCRIPT_FILE)], check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Bash script failed: {e}")
+        print("Provisioning failed during service installation.")
+        exit(1)
+
+
+def main():
+    logger.info("Provisioning started at main")
+    try:
+        raw_data = get_user_input()
+
+        config = build_VMconfig(raw_data)
+        machine = create_machine(config)
+
+        save_instance(machine)
+        run_bash_script()
+
+        logger.info("Provisioning completed successfully")
+        print("VM provisioned successfully!")
+
+    except Exception as e:
+        logger.error(f"Provisioning failed: {e}")
+        print("Error:", e)
+
+
+if __name__ == "__main__":
+    main()
