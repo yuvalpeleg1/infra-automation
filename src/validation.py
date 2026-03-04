@@ -10,11 +10,18 @@ EC2_TYPE_FILE = BASE_DIR / "configs" / "ec2_types.json"
 
 # Getting ec2 types json
 def load_ec2_types():
-    try:
-        with open(EC2_TYPE_FILE, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        raise RuntimeError("EC2 types json not found")
+    if not EC2_TYPE_FILE.exists():
+        raise RuntimeError(f"EC2 types json not found at {EC2_TYPE_FILE}")
+    with open(EC2_TYPE_FILE, "r", encoding="utf-8") as f:
+        content = f.read().strip()
+        if not content:
+            raise RuntimeError(
+                f"EC2 types json is empty! Check file contents: {EC2_TYPE_FILE}"
+            )
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as e:
+            raise RuntimeError(f"EC2 types json invalid: {e}")
 
 
 EC2_TYPES = load_ec2_types()

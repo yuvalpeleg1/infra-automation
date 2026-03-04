@@ -1,0 +1,16 @@
+[
+  {
+    "name": "yuval",
+    "os": "windows",
+    "instance_type": "t2.micro",
+    "cpu": 1,
+    "ram": 1
+  },
+  {
+    "name": "hy",
+    "os": "windows",
+    "instance_type": "t3.medium",
+    "cpu": 2,
+    "ram": 4
+  }
+]

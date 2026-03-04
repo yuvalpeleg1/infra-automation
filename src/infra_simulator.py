@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import platform
 import subprocess
 from logger_config import setup_logger
 from validation import VMConfig
@@ -21,7 +22,9 @@ def get_user_input():
         "os": input(
             "OS (amazon linux / windows / red hat enterprise linux / ubuntu / ubuntu pro): "
         ),
-        "instance_type": input("Instance type: "),
+        "instance_type": input(
+            "Instance type (t2.micro / t2.small / t2.medium / t3.micro / t3.small / t3.medium): "
+        ),
     }
 
 
@@ -44,11 +47,11 @@ def create_machine(config: VMConfig) -> Machine:
 
 
 def save_instance(machine: Machine):
-    if CONFIG_FILE.exists():
+    data = []
+
+    if CONFIG_FILE.exists() and CONFIG_FILE.stat().st_size > 0:
         with open(CONFIG_FILE, "r") as f:
             data = json.load(f)
-    else:
-        data = []
 
     data.append(machine.to_dict())
     with open(CONFIG_FILE, "w") as f:
@@ -57,7 +60,10 @@ def save_instance(machine: Machine):
 
 def run_bash_script():
     try:
-        subprocess.run(["bash", str(SCRIPT_FILE)], check=True)
+        if platform.system() == "Windows":
+            print("Skipping Bash script on Windows")
+        else:
+            subprocess.run(["bash", str(SCRIPT_FILE)], check=True)
     except subprocess.CalledProcessError as e:
         logger.error(f"Bash script failed: {e}")
         print("Provisioning failed during service installation.")
