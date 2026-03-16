@@ -5,7 +5,7 @@ import json
 
 # ec2 types json Path
 BASE_DIR = Path(__file__).resolve().parent.parent
-EC2_TYPE_FILE = BASE_DIR / "configs" / "ec2_types.json"
+EC2_TYPE_FILE = Path(fr"{BASE_DIR}\configs\ec2_types.json")
 
 
 # Getting ec2 types json

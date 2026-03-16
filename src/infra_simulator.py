@@ -17,6 +17,7 @@ logger = setup_logger("infra_simulator")
 
 # getting input from user
 def get_user_input():
+    logger.info("Getting user input...")
     return {
         "name": input("Vm Name: "),
         "os": input(
@@ -30,11 +31,13 @@ def get_user_input():
 
 # checking validation on input with VMConfig
 def build_VMconfig(instance: dict) -> VMConfig:
+    logger.info("Checking Validation...")
     return VMConfig(**instance)
 
 
 # after validation we can create the Machine
 def create_machine(config: VMConfig) -> Machine:
+    logger.info("Creating Machine...")
     resources = config.get_resources()
 
     return Machine(
@@ -56,12 +59,14 @@ def save_instance(machine: Machine):
     data.append(machine.to_dict())
     with open(CONFIG_FILE, "w") as f:
         data = json.dump(data, f, indent=2)
+    logger.info(f"Instance {machine.name} saved to instances.json")
 
 
 def run_bash_script():
     try:
         if platform.system() == "Windows":
-            print("Skipping Bash script on Windows")
+            logger.warning("Running on Windows, skipping Bash installation script")
+            print("Skipping bash service installation (Windows detected)")
         else:
             subprocess.run(["bash", str(SCRIPT_FILE)], check=True)
     except subprocess.CalledProcessError as e:
@@ -74,18 +79,24 @@ def main():
     logger.info("Provisioning started at main")
     try:
         raw_data = get_user_input()
+        logger.debug(f"User input: {raw_data}")
 
         config = build_VMconfig(raw_data)
+        logger.info("Validation Completed")
+
         machine = create_machine(config)
+        logger.info("Machine Creation Completed")
 
         save_instance(machine)
+        logger.info("Saved Instance Completed")
+
         run_bash_script()
 
-        logger.info("Provisioning completed successfully")
+        logger.info("Provisioning completed successfully\n\n")
         print("VM provisioned successfully!")
 
     except Exception as e:
-        logger.error(f"Provisioning failed: {e}")
+        logger.error(f"Provisioning failed: {e}\n\n")
         print("Error:", e)
 
 
