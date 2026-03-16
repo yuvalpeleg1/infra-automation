@@ -3,15 +3,7 @@
 ## Overview
 
 This project simulates infrastructure provisioning using Python.
-It allows users to define virtual machines (VMs), validates the configuration, saves it to a configuration file, and simulates service installation using a Bash script.
-
-The project demonstrates concepts commonly used in DevOps workflows such as:
-
-* input validation
-* modular Python design
-* logging
-* configuration management
-* service automation
+It allows users to define virtual machines, validates the configuration, saves it to a configuration file, and simulates service installation using a Bash script.
 
 ---
 
@@ -42,9 +34,16 @@ pip install -r requirements.txt
 
 ## 5. Run the simulator
 
-python src/infra_simulator.py
+python src/infra_simulator.py ( # with or without args)
 
 ---
+
+| Argument | Description                 | Example           |
+| -------- | --------------------------- | ----------------- |
+| `--name` | Name of the virtual machine | `--name yuval_the_king`      |
+| `--os`   | Operating system of the VM  | `--os ubuntu`     |
+| `--type` | Instance type               | `--type t2.medium` |
+
 
 ## Project Structure
 

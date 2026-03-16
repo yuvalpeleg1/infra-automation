@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 import platform
@@ -15,9 +16,25 @@ SCRIPT_FILE = BASE_DIR / "scripts" / "install_nginx.sh"
 logger = setup_logger("infra_simulator")
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Infra Automation Simulator")
+
+    parser.add_argument("--name", help="VM name")
+    parser.add_argument("--os", help="Operating System")
+    parser.add_argument("--type", help="EC2 instance type")
+    return parser.parse_args()
+
+
 # getting input from user
-def get_user_input():
+def get_user_input(args):
     logger.info("Getting user input...")
+
+    if args.name and args.os and args.type:
+        return {
+            "name": args.name,
+            "os": args.os,
+            "instance_type": args.type,
+        }
     return {
         "name": input("Vm Name: "),
         "os": input(
@@ -77,15 +94,18 @@ def run_bash_script():
 
 def main():
     logger.info("Provisioning started at main")
+
+    args = parse_arguments()
+
     try:
-        raw_data = get_user_input()
+        raw_data = get_user_input(args)
         logger.debug(f"User input: {raw_data}")
 
         config = build_VMconfig(raw_data)
         logger.info("Validation Completed")
 
         machine = create_machine(config)
-        logger.info("Machine Creation Completed")
+        logger.info(f"Machine {machine.name} Creation Completed")
 
         save_instance(machine)
         logger.info("Saved Instance Completed")
