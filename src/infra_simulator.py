@@ -105,7 +105,7 @@ def main():
         logger.info("Validation Completed")
 
         machine = create_machine(config)
-        logger.info(f"Machine {machine.name} Creation Completed")
+        logger.info("Machine Creation Completed")
 
         save_instance(machine)
         logger.info("Saved Instance Completed")
