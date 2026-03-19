@@ -5,6 +5,8 @@
 This project simulates infrastructure provisioning using Python.
 It allows users to define virtual machines, validates the configuration, saves it to a configuration file, and simulates service installation using a Bash script.
 
+https://github.com/yuvalpeleg1/infra-automation
+
 ---
 
 # Setup
@@ -36,14 +38,13 @@ pip install -r requirements.txt
 
 python src/infra_simulator.py ( # with or without args)
 
+| Argument | Description                 | Example                 |
+| -------- | --------------------------- | ----------------------- |
+| `--name` | Name of the virtual machine | `--name yuval_the_king` |
+| `--os`   | Operating system of the VM  | `--os ubuntu`           |
+| `--type` | Instance type               | `--type t2.medium`      |
+
 ---
-
-| Argument | Description                 | Example           |
-| -------- | --------------------------- | ----------------- |
-| `--name` | Name of the virtual machine | `--name yuval_the_king`      |
-| `--os`   | Operating system of the VM  | `--os ubuntu`     |
-| `--type` | Instance type               | `--type t2.medium` |
-
 
 ## Project Structure
 
@@ -71,17 +72,16 @@ INFRA_AUTOMATION
 └── .gitignore              # ignored files and directories
 ```
 
-
 ---
 
 # Features
 
-* Dynamic VM creation via user input
-* Validation of operating system and instance type
-* Simulation of infrastructure provisioning
-* Logging of all provisioning steps
-* Configuration storage in JSON
-* Automated service installation using Bash
+- Dynamic VM creation via user input
+- Validation of operating system and instance type
+- Simulation of infrastructure provisioning
+- Logging of all provisioning steps
+- Configuration storage in JSON
+- Automated service installation using Bash
 
 ---
 
@@ -94,4 +94,3 @@ logs/provisioning.log
 Logs include timestamps, severity level, file name, function name, and message details to assist with debugging and auditing.
 
 ---
-
