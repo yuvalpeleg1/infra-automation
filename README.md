@@ -13,36 +13,47 @@ https://github.com/yuvalpeleg1/infra-automation
 
 ## 1. Clone the repository
 
-git clone <repository-url>
-cd INFRA_AUTOMATION
+`git clone <repository-url>`
+
+`cd INFRA_AUTOMATION`
 
 ## 2. Create a virtual environment
 
-python -m venv .venv
+`python -m venv .venv`
 
 ## 3. Activate the virtual environment
 
 Windows:
 
-.venv\Scripts\activate
+`.venv\Scripts\activate`
 
 Linux / Mac:
 
-source .venv/bin/activate
+`source .venv/bin/activate`
 
 ## 4. Install dependencies
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ## 5. Run the simulator
 
-python src/infra_simulator.py ( # with or without args)
+`python src/infra_simulator.py`
+
+You can run the simulator **with or without CLI arguments**.
+
+If no arguments are provided, the program will prompt you to enter the required values interactively.
+
+
 
 | Argument | Description                 | Example                 |
 | -------- | --------------------------- | ----------------------- |
 | `--name` | Name of the virtual machine | `--name yuval_the_king` |
 | `--os`   | Operating system of the VM  | `--os ubuntu`           |
 | `--type` | Instance type               | `--type t2.medium`      |
+
+Full Example:
+
+`python src/infra_simulator.py --name yuval_the_king --os ubuntu --type t2.medium`
 
 ---
 
