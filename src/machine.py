@@ -1,7 +1,7 @@
 from logger_config import setup_logger
 from dataclasses import dataclass, asdict
 
-logger = setup_logger("machine.py")
+logger = setup_logger("machine")
 
 
 @dataclass
@@ -13,9 +13,8 @@ class Machine:
     ram: int
 
     def __post_init__(self):
-        logger.info(
-            f"Machine created: {self.name} | "
-            f"{self.instance_type} (cpu: {self.cpu} , ram:{self.ram})"
+        logger.debug(
+            f"Machine created: {self.name} | {self.os} | {self.instance_type} (cpu: {self.cpu} , ram:{self.ram})\n"
         )
 
     def to_dict(self):

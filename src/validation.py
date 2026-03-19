@@ -1,3 +1,4 @@
+from logger_config import setup_logger
 from pathlib import Path
 from typing import Annotated
 from pydantic import BaseModel, Field, field_validator
@@ -5,16 +6,20 @@ import json
 
 # ec2 types json Path
 BASE_DIR = Path(__file__).resolve().parent.parent
-EC2_TYPE_FILE = Path(fr"{BASE_DIR}\configs\ec2_types.json")
+EC2_TYPE_FILE = Path(rf"{BASE_DIR}\configs\ec2_types.json")
+
+logger = setup_logger("validation")
 
 
 # Getting ec2 types json
 def load_ec2_types():
     if not EC2_TYPE_FILE.exists():
+        logger.critical(f"EC2 types json not found at {EC2_TYPE_FILE}")
         raise RuntimeError(f"EC2 types json not found at {EC2_TYPE_FILE}")
     with open(EC2_TYPE_FILE, "r", encoding="utf-8") as f:
         content = f.read().strip()
         if not content:
+            logger.critical(f"EC2 types json is empty! Check file contents: {EC2_TYPE_FILE}")
             raise RuntimeError(
                 f"EC2 types json is empty! Check file contents: {EC2_TYPE_FILE}"
             )
@@ -45,13 +50,15 @@ class VMConfig(BaseModel):
         ]
         os = os.lower()
         if os not in available_os:
-            raise ValueError(f"Os must be one of: {available_os}")
+            logger.warning(f"Invalid OS: {os}")
+            raise ValueError(f"OS must be one of: {available_os}")
         return os
 
     # Checking the instance type
     @field_validator("instance_type")
     def validate_instance_type(cls, instance_type):
         if instance_type not in EC2_TYPES:
+            logger.warning(f"Invalid instance type: {instance_type}")
             raise ValueError(
                 f"Invalid instance type. These are the options: {list(EC2_TYPES.keys())}"
             )

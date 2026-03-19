@@ -27,20 +27,18 @@ def parse_arguments():
 
 # getting input from user
 def get_user_input(args):
-    logger.info("Getting user input...")
-
-    if args.name and args.os and args.type:
-        return {
-            "name": args.name,
-            "os": args.os,
-            "instance_type": args.type,
-        }
+    logger.info("Collecting user input")
+    logger.info(
+        f"Input source: name={'CLI' if args.name else 'USER'}, os={'CLI' if args.os else 'USER'}, type={'CLI' if args.type else 'USER'}"
+    )
     return {
-        "name": input("Vm Name: "),
-        "os": input(
+        "name": args.name or input("Vm Name: "),
+        "os": args.os
+        or input(
             "OS (amazon linux / windows / red hat enterprise linux / ubuntu / ubuntu pro): "
         ),
-        "instance_type": input(
+        "instance_type": args.type
+        or input(
             "Instance type (t2.micro / t2.small / t2.medium / t3.micro / t3.small / t3.medium): "
         ),
     }
@@ -48,13 +46,13 @@ def get_user_input(args):
 
 # checking validation on input with VMConfig
 def build_VMconfig(instance: dict) -> VMConfig:
-    logger.info("Checking Validation...")
+    logger.debug("Validating VM configuration")
     return VMConfig(**instance)
 
 
 # after validation we can create the Machine
 def create_machine(config: VMConfig) -> Machine:
-    logger.info("Creating Machine...")
+    logger.info("Creating Machine")
     resources = config.get_resources()
 
     return Machine(
@@ -82,37 +80,38 @@ def save_instance(machine: Machine):
 def run_bash_script():
     try:
         if platform.system() == "Windows":
-            logger.warning("Running on Windows, skipping Bash installation script")
+            logger.warning("Running on Windows, skipping Bash installation script\n")
             print("Skipping bash service installation (Windows detected)")
         else:
             subprocess.run(["bash", str(SCRIPT_FILE)], check=True)
     except subprocess.CalledProcessError as e:
-        logger.error(f"Bash script failed: {e}")
+        logger.error(f"Bash script failed: {e}\n")
         print("Provisioning failed during service installation.")
         exit(1)
 
 
 def main():
-    logger.info("Provisioning started at main")
+    logger.info("Provisioning started")
 
     args = parse_arguments()
 
     try:
         raw_data = get_user_input(args)
-        logger.debug(f"User input: {raw_data}")
+        logger.debug(f"User Data: {raw_data}\n")
 
         config = build_VMconfig(raw_data)
-        logger.info("Validation Completed")
+        logger.info("Validation Successful\n")
 
         machine = create_machine(config)
-        logger.info("Machine Creation Completed")
 
         save_instance(machine)
-        logger.info("Saved Instance Completed")
+        logger.info("Saved Instance Completed\n")
 
         run_bash_script()
 
-        logger.info("Provisioning completed successfully\n\n")
+        logger.info("Provisioning Completed Successfully\n")
+        logger.info(f"{'-' * 80}\n")
+
         print("VM provisioned successfully!")
 
     except Exception as e:
